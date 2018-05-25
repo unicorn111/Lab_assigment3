@@ -1,0 +1,130 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code.
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*.
+
+```{r}
+id_num <- 027
+set.seed(id_num)
+theta = id_num/10
+M <- 1000
+N <- 10
+## sample N rv; then replicate M times and write the results as an N*M matrix
+x <- matrix(rexp(N*M, rate=1/theta), nrow = N)
+## calculate sample mean in each column
+sample_mean <- colMeans(x)
+## calculate sample sd of each column; 2 in 'apply' indicates the coordinate to keep as output
+sample_sd <- sd(sample_mean)
+## check how good the CI are:
+for (alpha in c(.01, .05, .1)){
+  ##chi-square distribution
+  lower <- 2*N*theta / qchisq(1-alpha/2, df=2*N)
+  upper <- 2*N*theta / qchisq(alpha/2, df=2*N)
+  length <- upper - lower
+  cat(alpha, ": ", sum((sample_mean <= upper) & (sample_mean >= lower))/ M, " length ", length, "\n", sep = "")
+}
+
+```
+
+
+```{r}
+id_num <- 027
+set.seed(id_num)
+theta = id_num/10
+M <- 1000
+N <- 10
+## sample N rv; then replicate M times and write the results as an N*M matrix
+x <- matrix(rexp(N*M, rate=1/theta), nrow = N)
+## calculate sample mean in each column
+sample_mean <- colMeans(x)
+## calculate sample sd of each column;
+sample_sd <- sd(sample_mean)
+for (alpha in c(.01, .05, .1)){
+  ##normal approxiation
+  z = qnorm(1 - alpha/2) * theta / sqrt(N)
+  cat(alpha, ": ", sum((-sample_mean <= -theta +z) & (-sample_mean >= -theta - z))/ M, " length ", abs(-theta +z + theta +z), "\n", sep = "")
+}
+
+```
+
+```{r}
+id_num <- 027
+set.seed(id_num)
+theta = id_num/10
+M <- 1000
+N <- 10
+## sample N rv; then replicate M times and write the results as an N*M matrix
+x <- matrix(rexp(N*M, rate=1/theta), nrow = N)
+## calculate sample mean in each column
+sample_mean <- colMeans(x)
+## calculate sample sd of each column
+sample_sd <- sd(sample_mean)
+for (alpha in c(.01, .05, .1)){
+  ##student approximation
+  t <- sample_mean/sqrt(N) * qt(1-alpha, N-1)
+  cat(alpha, ": ", sum((-sample_mean <= -theta +t) & (-sample_mean >= -theta - t))/ M, " length ", mean(t+t), "\n", sep = "")
+}
+```
+
+```{r}
+## Student approxumation has the smallest precision. Hovewer, normal approximation is more accurate then the student approximation. In this case normal approximation is the best one.
+```
+
+
+```{r}
+id_num <- 027
+set.seed(id_num)
+theta = id_num/10
+M <- 1000
+N <- 10
+## sample N rv; then replicate M times and write the results as an N*M matrix
+x <- matrix(rpois(M*N, theta), nrow = N)
+## calculate sample mean in each column
+sample_mean <- colMeans(x)
+## calculate sample sd of each column
+sample_sd <- sd(sample_mean)
+for (alpha in c(.01, .05, .1)){
+  z = qnorm(1 - alpha/2) * theta / sqrt(N)
+  cat(alpha, ": ", sum((-sample_mean <= -theta +z) & (-sample_mean >= -theta - z))/ M, " length ", abs(-theta +z + theta +z), "\n", sep = "")
+}
+
+
+```
+
+```{r}
+id_num <- 027
+set.seed(id_num)
+theta = id_num/10
+M <- 1000
+N <- 10
+## sample N rv; then replicate M times and write the results as an N*M matrix
+x <- matrix(rpois(M*N, theta), nrow = N)
+## calculate sample mean in each column
+sample_mean <- colMeans(x)
+## calculate sample sd of each column
+sample_sd <- sd(sample_mean)
+for (alpha in c(.01, .05, .1)){
+  t <- sample_mean/sqrt(N) * qt(1-alpha, N-1)
+  cat(alpha, ": ", sum((-sample_mean <= -theta +t) & (-sample_mean >= -theta - t))/ M, " length ", mean(t+t), "\n", sep = "")
+}
+```
+
+```{r}
+##Conﬁdence intervals contain the parameter θ with prescribed probability. As in previous task, Normal approximation is better
+
+```
+
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
